@@ -33,9 +33,9 @@ class DbSession
   //   }
   private function getConnection()
   {
-    $db = get_env("CLEARDB_DATABASE_URL");
+    $db = getenv("CLEARDB_DATABASE_URL");
     if ($db) {
-      $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+      $url = parse_url($db);
 
       $host = $url["host"];
       $user = $url["user"];
