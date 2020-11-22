@@ -33,16 +33,32 @@ class DbSession
   //   }
   private function getConnection()
   {
-    $host = "localhost";
-    $user = "root";
-    $pass = "root";
-    $database = "citas";
-    $charset = "utf-8";
-    $options = [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];
-    $pdo = new pdo("mysql:host={$host};dbname={$database};charset{$charset}", $user, $pass, $options);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = get_env("CLEARDB_DATABASE_URL");
+    if ($db) {
+      $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
-    return $pdo;
+      $host = $url["host"];
+      $user = $url["user"];
+      $pass = $url["pass"];
+      $database = substr($url["path"], 1);
+
+      $charset = "utf-8";
+      $options = [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];
+      $pdo = new pdo("mysql:host={$host};dbname={$database};charset{$charset}", $user, $pass, $options);
+      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      return $pdo;
+    } else {
+      $host = "localhost";
+      $user = "root";
+      $pass = "root";
+      $database = "citas";
+      $charset = "utf-8";
+      $options = [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];
+      $pdo = new pdo("mysql:host={$host};dbname={$database};charset{$charset}", $user, $pass, $options);
+      $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  
+      return $pdo;
+    }
   }
 
   }
